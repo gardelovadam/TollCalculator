@@ -49,9 +49,9 @@ public class TollServiceTests
     {
         var dateTimes = new[]
         {
-            new DateTime(2023, 11, 6, 7, 0, 0),
-            new DateTime(2023, 11, 6, 7, 15, 0),
-            new DateTime(2023, 11, 6, 7, 30, 0)
+            new DateTime(2023, 11, 6, 6, 19, 0),
+            new DateTime(2023, 11, 6, 6, 39, 0),
+            new DateTime(2023, 11, 6, 7, 22, 0),
         };
 
         var result = _tollService.CalculateToll(VehicleType.Car, dateTimes);

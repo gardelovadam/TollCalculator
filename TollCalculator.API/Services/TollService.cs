@@ -82,15 +82,15 @@ public class TollService : ITollService
     {
         return new TimeSlot[]
         {
-            new(1, new TimeSpan(06, 00, 0), new TimeSpan(06, 29, 00), 8),
-            new(2, new TimeSpan(06, 30, 0), new TimeSpan(06, 59, 00), 13),
-            new(3, new TimeSpan(07, 00, 0), new TimeSpan(07, 59, 00), 18),
-            new(4, new TimeSpan(08, 00, 0), new TimeSpan(08, 29, 00), 13),
-            new(5, new TimeSpan(08, 30, 0), new TimeSpan(14, 59, 00), 8),
-            new(6, new TimeSpan(15, 00, 0), new TimeSpan(15, 29, 00), 13),
-            new(7, new TimeSpan(15, 30, 0), new TimeSpan(16, 59, 00), 18),
-            new(8, new TimeSpan(17, 00, 0), new TimeSpan(17, 59, 00), 13),
-            new(9, new TimeSpan(18, 00, 0), new TimeSpan(18, 29, 00), 8)
+            new(new TimeSpan(06, 00, 0), new TimeSpan(06, 29, 59), 8),
+            new(new TimeSpan(06, 30, 0), new TimeSpan(06, 59, 59), 13),
+            new(new TimeSpan(07, 00, 0), new TimeSpan(07, 59, 59), 18),
+            new(new TimeSpan(08, 00, 0), new TimeSpan(08, 29, 59), 13),
+            new(new TimeSpan(08, 30, 0), new TimeSpan(14, 59, 59), 8),
+            new(new TimeSpan(15, 00, 0), new TimeSpan(15, 29, 59), 13),
+            new(new TimeSpan(15, 30, 0), new TimeSpan(16, 59, 59), 18),
+            new(new TimeSpan(17, 00, 0), new TimeSpan(17, 59, 59), 13),
+            new(new TimeSpan(18, 00, 0), new TimeSpan(18, 29, 59), 8)
         };
     }
     #endregion Private help methods
