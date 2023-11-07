@@ -44,6 +44,7 @@ public class TollService : ITollService
 
             foreach (var date in dailyDates)
             {
+                // If this is the first date or the date is outside the 60 minute window from the start of hour
                 if (!startOfHourWindow.HasValue || (date - startOfHourWindow.Value).TotalMinutes > 60)
                 {
                     dailyTollFee += highestTollInOneHour;
@@ -57,6 +58,7 @@ public class TollService : ITollService
                 }
                 else
                 {
+                    // If within the same 60-minute window, check if the current toll amount is higher
                     var currentTollAmount = GetTollAmount(date);
                     if (currentTollAmount > highestTollInOneHour)
                     {
