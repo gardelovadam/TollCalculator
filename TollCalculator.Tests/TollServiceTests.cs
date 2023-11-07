@@ -32,7 +32,7 @@ public class TollServiceTests
     public void CalculateToll_TollFreeVehicle_ReturnsZeroToll(VehicleType vehicle)
     {
         var result = _tollService.CalculateToll(vehicle, new DateTime[] { DateTime.Now });
-        Assert.That(result.TollFee, Is.EqualTo(0));
+        Assert.That(result.TotalFee, Is.EqualTo(0));
     }
     
     [Test]
@@ -41,7 +41,7 @@ public class TollServiceTests
         var passageTime = new DateTime(2023, 11, 6, 7, 0, 0);
 
         var result = _tollService.CalculateToll(VehicleType.Car, new[] { passageTime });
-        Assert.That(result.TollFee, Is.EqualTo(18m));
+        Assert.That(result.TotalFee, Is.EqualTo(18m));
     }
 
     [Test]
@@ -55,7 +55,27 @@ public class TollServiceTests
         };
 
         var result = _tollService.CalculateToll(VehicleType.Car, dateTimes);
-        Assert.That(result.TollFee, Is.EqualTo(18m));
+        Assert.That(result.TotalFee, Is.EqualTo(31m));
+    }
+
+    [Test]
+    public void CalculateToll_ShouldCalculateCorrectToll_ForMultipleDatesWithOwnHourlyLimit()
+    {
+        var dateTimes = new[]
+        {
+            //Day 1
+            new DateTime(2023, 11, 6, 6, 19, 0),
+            new DateTime(2023, 11, 6, 6, 39, 0),
+            new DateTime(2023, 11, 6, 7, 22, 0),
+            //Day 2
+            new DateTime(2023, 11, 7, 6, 19, 0),
+            new DateTime(2023, 11, 7, 6, 39, 0),
+        };
+
+        var result = _tollService.CalculateToll(VehicleType.Car, dateTimes);
+        
+        // Assert
+        Assert.That(result.TotalFee, Is.EqualTo(44));
     }
 
     [Test]
@@ -74,6 +94,6 @@ public class TollServiceTests
         };
     
         var result = _tollService.CalculateToll(VehicleType.Car, dateTimes);
-        Assert.That(result.TollFee, Is.EqualTo(TollConstants.MaxCost));
+        Assert.That(result.TotalFee, Is.EqualTo(TollConstants.MaxCost));
     }
 }

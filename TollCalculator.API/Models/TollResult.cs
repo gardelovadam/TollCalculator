@@ -5,7 +5,7 @@ namespace TollCalculator.API.Models;
 public class TollResult
 {
     public string ErrorMessage { get; set; }
-    public decimal TollFee { get; set; }
+    public decimal TotalFee { get; set; }
     public bool Success { get; set; }
         
     public TollResult()
@@ -22,7 +22,7 @@ public class TollResult
     public TollResult(decimal tollFee)
     {
         ErrorMessage = string.Empty;
-        TollFee = Math.Min(tollFee, TollConstants.MaxCost);
+        TotalFee = Math.Min(tollFee, TollConstants.MaxCost);
         Success = true;
     }
 }

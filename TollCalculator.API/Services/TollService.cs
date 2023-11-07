@@ -28,40 +28,53 @@ public class TollService : ITollService
         {
             return new TollResult(0);
         }
-    
-        var tollFee = 0m;
-        var highestTollInOneHour = 0m;
-        DateTime? startOfHourWindow = null;
         
-        foreach (var date in dates.OrderBy(d => d).Where(date => !date.IsTollFree()))
+        var totalTollFee = 0m;
+        
+        var groupedDates = dates
+            .Where(date => !date.IsTollFree())
+            .OrderBy(d => d)
+            .GroupBy(date => date.Date);
+    
+        foreach (var dailyDates in groupedDates)
         {
-            // If this is the first date or the date is outside the 60 minute window from the start of hour window
-            if (!startOfHourWindow.HasValue || (date - startOfHourWindow.Value).TotalMinutes > 60)
+            var dailyTollFee = 0m;
+            var highestTollInOneHour = 0m;
+            DateTime? startOfHourWindow = null;
+
+            foreach (var date in dailyDates)
             {
-                // Add the highest toll fee of the previous hour to the total fee and reset
-                tollFee += highestTollInOneHour;
-                highestTollInOneHour = GetTollAmount(date);
-                startOfHourWindow = date;
-            }
-            else
-            {
-                // If within the same 60-minute window, check if the current toll amount is higher
-                var currentTollAmount = GetTollAmount(date);
-                if (currentTollAmount > highestTollInOneHour)
+                if (!startOfHourWindow.HasValue || (date - startOfHourWindow.Value).TotalMinutes > 60)
                 {
-                    highestTollInOneHour = currentTollAmount;
+                    dailyTollFee += highestTollInOneHour;
+                    if (dailyTollFee >= TollConstants.MaxCost)
+                    {
+                        dailyTollFee = TollConstants.MaxCost;
+                        break;
+                    }
+                    highestTollInOneHour = GetTollAmount(date);
+                    startOfHourWindow = date;
+                }
+                else
+                {
+                    var currentTollAmount = GetTollAmount(date);
+                    if (currentTollAmount > highestTollInOneHour)
+                    {
+                        highestTollInOneHour = currentTollAmount;
+                    }
                 }
             }
-            
-            if (tollFee >= TollConstants.MaxCost)
+
+            dailyTollFee += highestTollInOneHour;
+            if (dailyTollFee > TollConstants.MaxCost)
             {
-                return new TollResult(TollConstants.MaxCost);
+                dailyTollFee = TollConstants.MaxCost;
             }
+
+            totalTollFee += dailyTollFee;
         }
 
-        // Add the highest toll fee of the last hour to the total fee
-        tollFee += highestTollInOneHour;
-        return new TollResult(tollFee);
+        return new TollResult(totalTollFee);
     }
 
     #region Private help methods
